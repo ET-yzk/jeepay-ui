@@ -61,4 +61,9 @@ export const asyncRouteDefine = {
     defaultPath: '/divisionRecord',
     component: () => import('@/views/division/record/DivisionRecordPage.vue'),
   }, // 分账记录
+
+  PrefilledOrderListPage: { // 新增预填订单配置
+    defaultPath: '/prefilledOrder',
+    component: () => import('@/views/prefilledOrder/List.vue'), // 指向List.vue
+  }, // 预填订单管理
 }

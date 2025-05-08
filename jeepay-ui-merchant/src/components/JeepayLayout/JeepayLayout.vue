@@ -144,9 +144,10 @@
         <slot />
 
         <div class="foot">
-          Copyright © 2021-2025
-          <a href="https://www.jeequan.com" target="_blank">计全科技</a>
-          All rights reserved.
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+            <div>Copyright © 2021-2025 浙江工业大学</div>
+            <div style="font-size: 12px; color: #888">Powered by <a href="https://www.jeequan.com" target="_blank" style="color: #888">计全科技</a></div>
+          </div>
         </div>
       </a-layout-content>
     </a-layout>

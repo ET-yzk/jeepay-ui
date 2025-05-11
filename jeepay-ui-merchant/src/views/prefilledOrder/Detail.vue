@@ -68,10 +68,10 @@
                 <a-tag color="orange">未生效</a-tag>
               </template>
             </a-descriptions-item>
-            <a-descriptions-item label="创建时间">{{ vdata.detailData.createdAt ? dayjs.utc(vdata.detailData.createdAt).local().format('YYYY-MM-DD HH:mm:ss') : '' }}</a-descriptions-item>
-            <a-descriptions-item label="更新时间">{{ vdata.detailData.updatedAt ? dayjs.utc(vdata.detailData.updatedAt).local().format('YYYY-MM-DD HH:mm:ss') : '' }}</a-descriptions-item>
-            <a-descriptions-item label="生效开始时间">{{ vdata.detailData.startTime ? dayjs.utc(vdata.detailData.startTime).local().format('YYYY-MM-DD HH:mm:ss') : '立即生效' }}</a-descriptions-item>
-            <a-descriptions-item label="生效结束时间">{{ vdata.detailData.endTime ? dayjs.utc(vdata.detailData.endTime).local().format('YYYY-MM-DD HH:mm:ss') : '长期有效' }}</a-descriptions-item>
+            <a-descriptions-item label="创建时间">{{ vdata.detailData.createdAt ? dayjs.utc(vdata.detailData.createdAt).local().format('YYYY-MM-DD HH:mm') : '' }}</a-descriptions-item>
+            <a-descriptions-item label="更新时间">{{ vdata.detailData.updatedAt ? dayjs.utc(vdata.detailData.updatedAt).local().format('YYYY-MM-DD HH:mm') : '' }}</a-descriptions-item>
+            <a-descriptions-item label="生效开始时间">{{ vdata.detailData.startTime ? dayjs.utc(vdata.detailData.startTime).local().format('YYYY-MM-DD HH:mm') : '立即生效' }}</a-descriptions-item>
+            <a-descriptions-item label="生效结束时间">{{ vdata.detailData.endTime ? dayjs.utc(vdata.detailData.endTime).local().format('YYYY-MM-DD HH:mm') : '长期有效' }}</a-descriptions-item>
           </a-descriptions>
         </a-card>
       </a-col>

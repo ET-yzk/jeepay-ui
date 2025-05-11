@@ -16,6 +16,10 @@
               </a-range-picker>
             </a-form-item>
             <jeepay-text-up
+              :placeholder="'预填订单号'"
+              v-model:value="vdata.searchData.sourcePrefilledOrderId"
+            />
+            <jeepay-text-up
               placeholder="支付/商户/渠道订单号"
               v-model:value="vdata.searchData.unionOrderId"
             />
@@ -89,7 +93,7 @@
       <JeepayTable
         @btnLoadClose="vdata.btnLoading = false"
         ref="infoTable"
-        :initData="true"
+        :initData="shouldInitData"
         :reqTableDataFunc="reqTableDataFunc"
         :tableColumns="vdata.tableColumns"
         :searchData="vdata.searchData"
@@ -518,7 +522,18 @@
 import RefundModal from './RefundModal.vue' // 退款弹出框
 import { API_URL_PAY_ORDER_LIST, API_URL_PAYWAYS_LIST, req } from '@/api/manage'
 import moment from 'moment'
-import { reactive, ref, getCurrentInstance, onMounted } from 'vue'
+import { reactive, ref, getCurrentInstance, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { watch } from 'vue'
+
+const parseInvoiceRemark = (remark) => {
+  if (!remark) return {}
+  return remark.split('; ').reduce((acc, pair) => {
+    const [key, val] = pair.split(': ')
+    if (key) acc[key] = val || '' // 处理值可能为空的情况
+    return acc
+  }, {})
+}
 
 const { $infoBox, $access } = getCurrentInstance()!.appContext.config.globalProperties
 
@@ -562,21 +577,85 @@ const vdata: any = reactive({
   open: false,
   detailData: {},
   payWayList: [],
-
   date: '',
 })
 
 const infoTable = ref()
 const refundModalInfo = ref()
-onMounted(() => {
-  if ($access('ENT_PAY_ORDER_SEARCH_PAY_WAY')) {
-    initPayWay()
+
+// 是否初始化表格数据
+const shouldInitData = computed(() => {
+  return Object.keys(route.query).length === 0 // 无参数时自动加载数据
+})
+
+// 解析发票备注
+const parsedInvoiceData = computed(() => {
+  try {
+    return parseInvoiceRemark(vdata.parsedInvoiceRemarks)
+  } catch (error) {
+    console.error('解析发票备注失败:', error)
+    return {}
   }
 })
+
+const route = useRoute()
+onMounted(() => {
+  // 初始化支付方式列表
+  if ($access('ENT_PAY_ORDER_SEARCH_PAY_WAY')) {
+    initPayWay().then(() => {
+      // 支付方式加载完成后处理路由参数
+      handleRouteParams()
+    })
+  } else {
+    handleRouteParams()
+  }
+})
+
+function handleRouteParams() {
+  const { ...queryParams } = route.query
+
+  // 合并查询参数
+  Object.keys(queryParams).forEach((key) => {
+    if (key !== 'date') {
+      vdata.searchData[key] = queryParams[key]
+    } else if (key === 'date') {
+      const dateRange = queryParams[key]
+      if (typeof dateRange === 'string') {
+        const dateArr = dateRange.split(',')
+        vdata.date = [
+          moment(dateArr[0], 'YYYY-MM-DD HH:mm:ss'),
+          moment(dateArr[1], 'YYYY-MM-DD HH:mm:ss')
+        ]
+        vdata.searchData.createdStart = dateArr[0]
+        vdata.searchData.createdEnd = dateArr[1]
+      }
+    }
+  })
+
+  // 仅在有参数时触发查询
+  if (Object.keys(vdata.searchData).length > 0 || vdata.date.length > 0) {
+    queryFunc()
+  }
+}
+
+// 修改queryFunc方法，添加延迟防止重复查询
 function queryFunc() {
   vdata.btnLoading = true
-  infoTable.value.refTable(true)
+  // 延迟执行查询，避免多次重复请求
+  setTimeout(() => {
+    infoTable.value.refTable(true)
+  }, 300)
 }
+
+// 添加路由变化监听器
+watch(
+  () => route.query,
+  () => {
+    // 处理路由参数变化
+    handleRouteParams()
+  }
+)
+
 // 请求table接口数据
 function reqTableDataFunc(params) {
   return req.list(API_URL_PAY_ORDER_LIST, params)
@@ -610,7 +689,7 @@ function onClose() {
   vdata.open = false
 }
 function initPayWay() {
-  req.list(API_URL_PAYWAYS_LIST, { pageSize: -1 }).then((res) => {
+  return req.list(API_URL_PAYWAYS_LIST, { pageSize: -1 }).then((res) => {
     // 支付方式下拉列表
     vdata.payWayList = res.records
   })

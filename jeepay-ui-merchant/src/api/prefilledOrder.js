@@ -51,3 +51,23 @@ export function deletePrefilledOrder (prefilledOrderId) {
 // export function getPublicPrefilledOrderPayWays (prefilledOrderId) {
 //   return request.request({ url: '/api/anon/prefilledOrder/publicPay/' + prefilledOrderId + '/payways', method: 'GET' }, true, true, false)
 // }
+
+// 获取公开预填订单列表 (无需认证)
+export const prefilledOrderPublicList = (params) => {
+  return req.list('/api/anon/prefilledOrder', params)
+}
+
+// 获取公开预填订单详情 (无需认证)
+export const prefilledOrderPublicDetail = (prefilledOrderId) => {
+  return req.getById('/api/anon/prefilledOrder', prefilledOrderId)
+}
+
+// 获取商户应用配置的支付方式 (无需认证)
+export const prefilledOrderPublicPayWays = (prefilledOrderId) => {
+  return req.getById('/api/anon/prefilledOrder', `${prefilledOrderId}/payways`)
+}
+
+// 创建预填订单的支付订单 (无需认证)
+export const prefilledOrderPublicCreatePayOrder = (prefilledOrderId, params) => {
+  return req.add(`/api/anon/prefilledOrder/${prefilledOrderId}/pay`, params)
+}

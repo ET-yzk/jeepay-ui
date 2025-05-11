@@ -8,7 +8,19 @@ import { generatorDynamicRouter } from '@/router/generator-routers'
 
 NProgress.configure({ showSpinner: false })
 
-const rootRoute: any = [{ name: 'login', path: '/login', component: Login }]
+const rootRoute: any = [
+  { name: 'login', path: '/login', component: Login },
+  {
+    path: '/prefilledOrder/publicPay',
+    name: 'prefilledOrderPublicList',
+    component: () => import('@/views/prefilledOrder/PublicList.vue')
+  },
+  {
+    path: '/prefilledOrder/publicPay/:id',
+    name: 'prefilledOrderPublicPay',
+    component: () => import('@/views/prefilledOrder/PublicPay.vue')
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(),
@@ -16,7 +28,7 @@ const router = createRouter({
 })
 
 // 路由守卫
-const allowList = ['login', 'register', 'registerResult'] // no redirect allowList
+const allowList = ['login', 'register', 'registerResult', 'prefilledOrderPublicPay', 'prefilledOrderPublicList'] // no redirect allowList
 const loginRoutePath = '/login'
 
 // 路由守卫 // eslint-disable-next-line @typescript-eslint/no-explicit-any

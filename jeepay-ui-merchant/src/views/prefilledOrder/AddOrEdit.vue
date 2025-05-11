@@ -185,10 +185,10 @@ const props = defineProps({
 const infoFormModel = ref()
 
 const defaultRemarkConfig = () => ({
-  allowedInvoiceTypes: [],
+  allowedInvoiceTypes: ['personal', 'corporate'],
   generalEnabled: false,
   generalRequired: false,
-  invoiceEnabled: false,
+  invoiceEnabled: true,
   invoiceRequired: false
 })
 
@@ -215,6 +215,7 @@ const vdata = reactive({
   rules: {
     appId: [{ required: true, message: '请选择应用AppId', trigger: 'change' }],
     subject: [{ required: true, message: '请输入订单标题', trigger: 'blur' }],
+    body: [{ required: true, message: '请输入订单描述', trigger: 'blur' }],
     amount: [{ required: true, type: 'number', message: '请输入有效的支付金额', trigger: 'blur', min: 0.01 }],
     currency: [{ required: true, message: '请输入三位货币代码', trigger: 'blur', len: 3 }],
     status: [{ required: true, message: '请选择状态' }],

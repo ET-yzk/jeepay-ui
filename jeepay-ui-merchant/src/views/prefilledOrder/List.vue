@@ -68,7 +68,14 @@
             <span>{{ (record.amount / 100).toFixed(2) }} {{ record.currency ? record.currency.toUpperCase() : '' }}</span>
           </template>
           <template v-if="column.key === 'usage'">
-            <span>{{ record.currentUsageCount === null ? 0 : record.currentUsageCount }} / {{ record.maxUsageCount === null ? '∞' : record.maxUsageCount }}</span>
+            <div class="usage-tags">
+              <a-tag v-if="record.overSoldCount && record.overSoldCount !== 0" color="red" class="mb-1" style="margin-bottom: 5px;">
+                超卖: {{ record.overSoldCount }}
+              </a-tag>
+              <a-tag color="blue"  class="mb-1">
+                {{ record.currentUsageCount == null ? 0 : record.currentUsageCount + record.overSoldCount }} / {{ record.maxUsageCount == null ? '∞' : record.maxUsageCount }}
+              </a-tag>
+            </div>
           </template>
           <template v-if="column.key === 'validDate'">
             <div>

@@ -46,7 +46,8 @@
         <a-card title="使用情况" size="small">
           <a-descriptions :column="1" :labelStyle="{ width: '120px', paddingRight: '10px', paddingLeft: '10px' }" style="margin-top: 10px;" >
             <a-descriptions-item label="最大使用次数">{{ vdata.detailData.maxUsageCount || '无限制' }}</a-descriptions-item>
-            <a-descriptions-item label="当前使用次数">{{ vdata.detailData.currentUsageCount }}</a-descriptions-item>
+            <a-descriptions-item label="当前使用次数">{{ vdata.detailData.currentUsageCount + vdata.detailData.overSoldCount }}</a-descriptions-item>
+            <a-descriptions-item label="超出使用次数">{{ vdata.detailData.overSoldCount }}</a-descriptions-item>
           </a-descriptions>
         </a-card>
       </a-col>
@@ -152,6 +153,7 @@ const vdata = reactive({
     status: 1,
     maxUsageCount: '',
     currentUsageCount: '',
+    overSoldCount: '',
     createdAt: '',
     updatedAt: '',
     startTime: '',

@@ -117,7 +117,7 @@
             <a-date-picker
               v-model:value="vdata.saveObject.startTime"
               show-time
-              format="YYYY-MM-DD HH:mm:ss"
+              format="YYYY-MM-DD HH:mm"
               placeholder="留空表示立即生效"
               style="width: 100%"
               
@@ -129,7 +129,7 @@
             <a-date-picker
               v-model:value="vdata.saveObject.endTime"
               show-time
-              format="YYYY-MM-DD HH:mm:ss"
+              format="YYYY-MM-DD HH:mm"
               placeholder="留空表示长期有效"
               style="width: 100%"
               

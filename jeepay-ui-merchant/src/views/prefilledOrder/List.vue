@@ -129,7 +129,7 @@
       <a-watermark content="杭州市计算机学会">
         <div style="display: flex; justify-content: center; align-items: center;">
           <a-space direction="vertical" align="center" :size="16">
-            <qrcode-vue :value="vdata.currentQrCodeUrl" :size="200" level="H" ref="qrCodeCanvasRef" />
+            <a-qrcode v-if="vdata.currentQrCodeUrl" :value="vdata.currentQrCodeUrl" :size="200" level="H" ref="qrCodeCanvasRef" />
             <p v-if="vdata.currentRecordForQrCode" style="margin: 0; font-size: 14px; color: #555;">{{ vdata.currentRecordForQrCode.subject }}</p>
           </a-space>
         </div>
@@ -144,7 +144,6 @@ import { reactive, ref, getCurrentInstance, onMounted } from 'vue'
 // 配置dayjs使用UTC插件
 dayjs.extend(utc)
 import { CopyOutlined } from '@ant-design/icons-vue'
-import QrcodeVue from 'qrcode.vue'
 import { Modal as AModal } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -245,10 +244,9 @@ function showQrCodeModal (record) {
   }
 }
 
-async function downloadQrCode () {
-  if (qrCodeCanvasRef.value && qrCodeCanvasRef.value.canvasEl) {
-    const canvas = qrCodeCanvasRef.value.canvasEl as HTMLCanvasElement
-    const url = canvas.toDataURL('image/png')
+const downloadQrCode = async () => {
+  if (qrCodeCanvasRef.value) {
+    const url = await qrCodeCanvasRef.value.toDataURL();
     const a = document.createElement('a')
     a.href = url
     a.download = `prefilled_order_qr_${vdata.currentRecordForQrCode?.prefilledOrderId || 'qrcode'}.png`

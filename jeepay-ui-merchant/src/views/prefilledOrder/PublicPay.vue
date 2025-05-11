@@ -345,7 +345,7 @@
                     <div v-if="!vdata.apiRes.payData" style="text-align: center; padding: 20px;">
                       <a-spin tip="正在生成二维码..." />
                     </div>
-                    <qrcode-vue
+                    <a-qrcode
                       v-else
                       :value="String(vdata.apiRes.payData).replace(/`/g, '').trim()"
                       :size="200"
@@ -454,7 +454,6 @@ import {
 } from '@/api/prefilledOrder'
 import { message, Spin } from 'ant-design-vue'
 import { LeftOutlined, LinkOutlined, MobileOutlined, SmileOutlined } from '@ant-design/icons-vue'
-import QrcodeVue from 'qrcode.vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import dayjs from 'dayjs'
 import ReconnectingWebSocket from 'reconnectingwebsocket'

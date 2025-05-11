@@ -246,8 +246,8 @@
           </a-col>
           <a-col :sm="12">
             <a-descriptions>
-              <a-descriptions-item label="商户号">
-                {{ vdata.detailData.mchNo }}
+              <a-descriptions-item label="预填订单号">
+                {{ vdata.detailData.sourcePrefilledOrderId }}
               </a-descriptions-item>
             </a-descriptions>
           </a-col>
@@ -501,6 +501,35 @@
           </a-col>
         </a-row>
         <a-divider />
+
+        <a-row v-if="vdata.parsedRemarks" justify="space-between" type="flex">
+          <a-descriptions>
+            <a-descriptions-item label="类型">
+              <a-tag color="blue">普通备注</a-tag>
+            </a-descriptions-item>
+          </a-descriptions>
+
+          <a-descriptions>
+            <a-descriptions-item label="备注">
+              {{ vdata.parsedGeneralRemarks || '无' }}
+            </a-descriptions-item>
+          </a-descriptions>
+
+          <a-descriptions>
+            <a-descriptions-item label="类型">
+              <a-tag color="orange">发票备注</a-tag>
+            </a-descriptions-item>
+          </a-descriptions>
+          <a-col :sm="12" v-for="(value, key) in parsedInvoiceData" :key="key">
+            <a-descriptions>
+              <a-descriptions-item :label="key">
+                {{ value }}
+              </a-descriptions-item>
+            </a-descriptions>
+          </a-col>
+          <a-divider />
+        </a-row>
+
         <a-row justify="start" type="flex">
           <a-col :sm="24">
             <a-form layout="vertical">
@@ -674,6 +703,27 @@ function openFunc(record, recordId) {
 function detailFunc(recordId) {
   req.getById(API_URL_PAY_ORDER_LIST, recordId).then((res) => {
     vdata.detailData = res
+    // 解析 extParam
+    if (res.extParam) {
+      try {
+        const extParamObj = JSON.parse(res.extParam)
+        let remarks = ''
+        if (extParamObj.generalRemark) {
+          remarks += `备注: ${extParamObj.generalRemark}; `
+          vdata.parsedGeneralRemarks = extParamObj.generalRemark
+        }
+        if (extParamObj.invoiceRemark) {
+          remarks += `${extParamObj.invoiceRemark}`
+          vdata.parsedInvoiceRemarks = extParamObj.invoiceRemark
+        }
+        vdata.parsedRemarks = remarks
+      } catch (e) {
+        console.error('解析extParam失败:', e)
+        vdata.parsedRemarks = '扩展参数格式错误，无法解析备注信息'
+      }
+    } else {
+      vdata.parsedRemarks = null
+    }
   })
   vdata.open = true
 }
@@ -687,6 +737,10 @@ function disabledDate(current) {
 }
 function onClose() {
   vdata.open = false
+  // 关闭抽屉时清空备注
+  vdata.parsedRemarks = ''
+  vdata.parsedInvoiceRemarks = ''
+  vdata.parsedGeneralRemarks = ''
 }
 function initPayWay() {
   return req.list(API_URL_PAYWAYS_LIST, { pageSize: -1 }).then((res) => {

@@ -114,6 +114,7 @@
             <JeepayTableColumns>
               <a-button type="link" v-if="$access('ENT_PREFILLED_ORDER_VIEW')" @click="detailFunc(record.prefilledOrderId)">详情</a-button>
               <a-button type="link" v-if="record.publicPayUrl" @click="showQrCodeModal(record)">二维码</a-button>
+              <a-button type="link" @click="getPayOrderByPrefilledOrderId(record.prefilledOrderId)">交易订单</a-button>
               <a-button type="link" v-if="$access('ENT_PREFILLED_ORDER_EDIT')" @click="editFunc(record.prefilledOrderId)">修改</a-button>
               <a-button type="link" v-if="$access('ENT_PREFILLED_ORDER_DEL')" style="color: red" @click="delFunc(record.prefilledOrderId)">删除</a-button>
             </JeepayTableColumns>
@@ -141,6 +142,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, getCurrentInstance, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 // 配置dayjs使用UTC插件
 dayjs.extend(utc)
@@ -154,6 +156,7 @@ import AddOrEdit from '@/views/prefilledOrder/AddOrEdit.vue' // 新建/编辑组
 import Detail from '@/views/prefilledOrder/Detail.vue' // 详情组件
 import { message as antdMessage } from 'ant-design-vue'
 
+const router = useRouter()
 const { $infoBox, $access } = getCurrentInstance()!.appContext.config.globalProperties
 
 const tableColumns = [
@@ -198,6 +201,15 @@ function queryFunc () {
 // 请求table接口数据
 function reqTableDataFunc (params) {
   return getPrefilledOrderList(params)
+}
+
+function getPayOrderByPrefilledOrderId (prefilledOrderId) {
+  router.push({
+    path: '/pay',
+    query: {
+      sourcePrefilledOrderId: prefilledOrderId
+    }
+  })
 }
 
 function searchFunc () {

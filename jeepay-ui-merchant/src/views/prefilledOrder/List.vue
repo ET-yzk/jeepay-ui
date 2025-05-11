@@ -6,7 +6,7 @@
           <div class="table-layer">
             <jeepay-text-up placeholder="预填订单号" v-model:value="vdata.searchData.prefilledOrderId" />
             <jeepay-text-up placeholder="应用AppId" v-model:value="vdata.searchData.appId" />
-            <jeepay-text-up placeholder="订单标题" v-model:value="vdata.searchData.subject" />
+            <jeepay-text-up placeholder="订单标题/描述" v-model:value="vdata.searchData.description" />
             <!-- <jeepay-text-up placeholder="订单描述信息" v-model:value="vdata.searchData.body" /> -->
             <a-range-picker
               :show-time="{ format: 'HH:mm:ss' }"
@@ -29,8 +29,9 @@
                 prefilledOrderId: '',
                 appId: '',
                 status: '',
-                subject: '',
-                body: '',
+                // subject: '',
+                // body: '',
+                description: '',
                 usageStart: null,
                 usageEnd: null
               })">重置</a-button>
@@ -178,8 +179,9 @@ const vdata = reactive({
     prefilledOrderId: '',
     appId: '',
     status: '',
-    subject: '',
-    body: '',
+    // subject: '',
+    // body: '',
+    description: '',
     usageStart: null as any,
     usageEnd: null as any
   },

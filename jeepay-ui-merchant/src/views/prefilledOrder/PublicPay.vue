@@ -856,9 +856,9 @@ const handleConfirmPay = async () => {
       vdata.payOrderWebSocket.close()
     }
 
-    // const wsUrl = `${getWebSocketPrefix()}/api/anon/ws/payOrder/${res.payOrderId}/${new Date().getTime()}`
+    const wsUrl = `${getWebSocketPrefix()}/api/anon/ws/payOrder/${res.payOrderId}/${new Date().getTime()}`
     // TODO: 暂时使用本地的WebSocket地址
-    const wsUrl = `ws://localhost:9218/api/anon/ws/payOrder/${res.payOrderId}/${new Date().getTime()}`
+    // const wsUrl = `ws://localhost:9218/api/anon/ws/payOrder/${res.payOrderId}/${new Date().getTime()}`
     vdata.payOrderWebSocket = new ReconnectingWebSocket(wsUrl)
 
     vdata.payOrderWebSocket.onopen = () => {

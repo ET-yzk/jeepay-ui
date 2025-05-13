@@ -245,7 +245,7 @@ async function copyText (text) {
     await navigator.clipboard.writeText(text) // 需要在安全上下文环境才能成功复制，如使用 https
     message.success('复制成功!')
   } catch (err) {
-    message.error('复制失败!')
+    message.error('复制失败，请确保使用HTTPS!')
   }
 }
 

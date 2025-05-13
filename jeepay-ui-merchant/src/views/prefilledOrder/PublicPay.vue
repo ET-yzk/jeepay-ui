@@ -673,7 +673,7 @@ const fetchOrderDetail = async () => {
       vdata.remarkData.invoiceType = vdata.orderDetail.remarkConfig.allowedInvoiceTypes[0]
     }
   } catch (error) {
-    message.error('加载订单详情失败: ' + ((error as Error).message || '未知错误'))
+    message.error('加载订单详情失败') // 存在全局拦截器显示后端返回的错误信息
     vdata.orderDetail = null
   } finally {
     vdata.loading = false
@@ -744,7 +744,7 @@ const fetchPayWays = async () => {
       }
     }
   } catch (error) {
-    message.error('加载支付方式失败: ' + ((error as Error).message || '未知错误'))
+    message.error('加载支付方式失败') // 存在全局拦截器显示后端返回的错误信息
     vdata.payWays = []
   }
 }

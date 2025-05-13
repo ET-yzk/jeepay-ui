@@ -118,7 +118,7 @@ const fetchOrderList = async (page = 1, pageSize = vdata.pagination.pageSize) =>
       vdata.pagination.total = 0
     }
   } catch (error) {
-    message.error('加载订单列表失败: ' + ((error as Error).message || '未知错误'))
+    message.error('加载订单列表失败') // 存在全局拦截器显示后端返回的错误信息
     vdata.orderList = []
     vdata.pagination.total = 0
   } finally {

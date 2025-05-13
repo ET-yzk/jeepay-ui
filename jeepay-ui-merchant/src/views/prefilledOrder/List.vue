@@ -133,6 +133,7 @@
           <a-space direction="vertical" align="center" :size="16">
             <a-qrcode v-if="vdata.currentQrCodeUrl" :value="vdata.currentQrCodeUrl" :size="200" level="H" ref="qrCodeCanvasRef" />
             <p v-if="vdata.currentRecordForQrCode" style="margin: 0; font-size: 14px; color: #555;">{{ vdata.currentRecordForQrCode.subject }}</p>
+            <p v-if="vdata.currentRecordForQrCode" style="margin: 0; font-size: 12px; color: #888;">🔗 {{ vdata.currentQrCodeUrl }}</p>
           </a-space>
         </div>
       </a-watermark>
@@ -154,7 +155,7 @@ import { getPrefilledOrderList, deletePrefilledOrder } from '@/api/prefilledOrde
 // 使用类型断言确保组件导入
 import AddOrEdit from '@/views/prefilledOrder/AddOrEdit.vue' // 新建/编辑组件
 import Detail from '@/views/prefilledOrder/Detail.vue' // 详情组件
-import { message as antdMessage } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 
 const router = useRouter()
 const { $infoBox, $access } = getCurrentInstance()!.appContext.config.globalProperties
@@ -231,20 +232,20 @@ function detailFunc (recordId) {
 function delFunc (recordId) {
   $infoBox.confirmDanger('确认删除该预填订单吗？', '删除后不可恢复。', () => {
     deletePrefilledOrder(recordId).then(() => {
-      antdMessage.success('删除成功！')
+      message.success('删除成功！')
       searchFunc()
     }).catch(err => {
-      antdMessage.error(err.message || '删除失败')
+      message.error(err.message || '删除失败')
     })
   })
 }
 
 async function copyText (text) {
   try {
-    await navigator.clipboard.writeText(text)
-    antdMessage.success('复制成功!')
+    await navigator.clipboard.writeText(text) // 需要在安全上下文环境才能成功复制，如使用 https
+    message.success('复制成功!')
   } catch (err) {
-    antdMessage.error('复制失败!')
+    message.error('复制失败!')
   }
 }
 
@@ -254,7 +255,7 @@ function showQrCodeModal (record) {
     vdata.currentRecordForQrCode = record
     vdata.qrCodeModalVisible = true
   } else {
-    antdMessage.warning('该订单没有公开支付地址，无法生成二维码！')
+    message.warning('该订单没有公开支付地址，无法生成二维码！')
   }
 }
 
@@ -267,9 +268,9 @@ const downloadQrCode = async () => {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-    antdMessage.success('二维码下载成功！')
+    message.success('二维码下载成功！')
   } else {
-    antdMessage.error('二维码生成失败，无法下载！')
+    message.error('二维码生成失败，无法下载！')
   }
 }
 
